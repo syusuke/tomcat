@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Bootstrap" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="org.apache.catalina.startup.Bootstrap" />
+    <module name="tomcat" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
