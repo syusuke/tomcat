@@ -16,6 +16,12 @@
  */
 package org.apache.catalina.startup;
 
+import org.apache.catalina.security.SecurityClassLoad;
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
+import org.apache.catalina.startup.ClassLoaderFactory.RepositoryType;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -26,12 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.catalina.security.SecurityClassLoad;
-import org.apache.catalina.startup.ClassLoaderFactory.Repository;
-import org.apache.catalina.startup.ClassLoaderFactory.RepositoryType;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 /**
  * Bootstrap loader for Catalina.  This application constructs a class loader
@@ -127,7 +127,7 @@ public final class Bootstrap {
 
 
     /**
-     * Daemon reference.
+     * Daemon reference. {@link Catalina} 对象
      */
     private Object catalinaDaemon = null;
 
@@ -257,6 +257,8 @@ public final class Bootstrap {
         // Load our startup class and call its process() method
         if (log.isDebugEnabled())
             log.debug("Loading startup class");
+
+        // 反射创建 Catalina 对象
         Class<?> startupClass = catalinaLoader.loadClass("org.apache.catalina.startup.Catalina");
         Object startupInstance = startupClass.getConstructor().newInstance();
 
@@ -268,6 +270,7 @@ public final class Bootstrap {
         paramTypes[0] = Class.forName("java.lang.ClassLoader");
         Object paramValues[] = new Object[1];
         paramValues[0] = sharedLoader;
+        // 调用 setParentClassLoader 方法
         Method method =
             startupInstance.getClass().getMethod(methodName, paramTypes);
         method.invoke(startupInstance, paramValues);
@@ -277,7 +280,9 @@ public final class Bootstrap {
 
 
     /**
-     * Load daemon.
+     * Load daemon. 调用 {@link org.apache.catalina.startup.Catalina}的 load 方法
+     * 调用:
+     * @see Catalina#load()
      */
     private void load(String[] arguments) throws Exception {
 

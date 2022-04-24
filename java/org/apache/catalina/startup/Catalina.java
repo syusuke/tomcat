@@ -17,21 +17,6 @@
 package org.apache.catalina.startup;
 
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Constructor;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.LogManager;
-
 import org.apache.catalina.Container;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
@@ -52,6 +37,17 @@ import org.apache.tomcat.util.log.SystemLogHandler;
 import org.apache.tomcat.util.res.StringManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
+
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.LogManager;
 
 
 /**
@@ -628,6 +624,7 @@ public class Catalina {
         if (serverXml != null) {
             serverXml.load(this);
         } else {
+            // ConfigFileLoader.getSource() conf/server.xml
             try (ConfigurationSource.Resource resource = ConfigFileLoader.getSource().getServerXml()) {
                 // Create and execute our Digester
                 Digester digester = start ? createStartDigester() : createStopDigester();
